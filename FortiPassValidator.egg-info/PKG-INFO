@@ -1,3 +1,17 @@
+Metadata-Version: 2.1
+Name: FortiPassValidator
+Version: 1.0.0
+Summary: A Python library for validating passwords with customizable rules.
+Home-page: https://github.com/ahmad18189/FortiPassValidator
+Author: Ahmed Abdelrahman
+Author-email: ahmad18189@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: profanity-check==1.0.3
+
 # FortiPassValidator
 
 FortiPassValidator is a Python library for validating passwords against customizable rules. It helps ensure that passwords are strong, meet complexity requirements, and avoid inappropriate language.
@@ -6,10 +20,6 @@ FortiPassValidator is a Python library for validating passwords against customiz
 
 - Validate password length, uppercase, lowercase, numbers, and special characters.
 - Detect inappropriate language in passwords using the `profanity-check` library.
-- Check passwords against common or weak patterns using the `zxcvbn` library.
-- Provide actionable feedback for weak passwords with specific improvement suggestions.
-- Offer guidance for using password managers for secure password storage.
-- Log password validation attempts securely for auditing purposes (optional).
 - Fully customizable validation settings.
 - Lightweight and easy to integrate into your projects.
 
@@ -79,19 +89,6 @@ print(f"Valid: {is_valid}, Feedback: {feedback}")
 # Output: Valid: True, Feedback: Password is valid.
 ```
 
-### Avoid Common Passwords
-
-FortiPassValidator checks passwords against common or weak patterns using the `zxcvbn` library. This ensures that commonly used or predictable passwords are flagged.
-
-Example:
-
-```python
-password = "password"
-is_valid, feedback = validator.validate(password)
-print(f"Valid: {is_valid}, Feedback: {feedback}")
-# Output: Valid: False, Feedback: This password is too weak or commonly used. Please choose a more unique password.
-```
-
 ### Profanity Detection
 
 FortiPassValidator detects inappropriate language in passwords using the `profanity-check` library. This ensures that offensive words are flagged during validation.
@@ -105,28 +102,16 @@ print(f"Valid: {is_valid}, Feedback: {feedback}")
 # Output: Valid: False, Feedback: Password contains inappropriate language.
 ```
 
-### Actionable Feedback for Weak Passwords
+### All Rules Disabled
 
-FortiPassValidator provides actionable suggestions for improving weak passwords:
-
-```python
-validator = FortiPassValidator()
-password = "weakpass"
-is_valid, feedback = validator.validate(password)
-print(f"Valid: {is_valid}, Feedback: {feedback}")
-# Output: Valid: False, Feedback: Password must be at least 8 characters long. Consider adding uppercase letters (e.g., A, B, C). Add at least one numeric digit (e.g., 1). Add at least one special character (e.g., @, #, $).
-```
-
-### Logging Validation Attempts
-
-If enabled, FortiPassValidator logs password validation attempts to a file (`password_validation_log.txt`) for auditing purposes:
+If you want minimal validation (e.g., for testing purposes), you can disable all rules:
 
 ```python
-validator = FortiPassValidator(log_attempts=True)
-password = "Test1234!"
+validator = FortiPassValidator(min_length=1, require_upper=False, require_lower=False, require_numbers=False, require_special=False)
+password = "a"
 is_valid, feedback = validator.validate(password)
 print(f"Valid: {is_valid}, Feedback: {feedback}")
-# Check `password_validation_log.txt` for logged attempts.
+# Output: Valid: True, Feedback: Password is valid.
 ```
 
 ### Comprehensive Validation
@@ -167,7 +152,6 @@ FortiPassValidator/
 ## Dependencies
 
 - `profanity-check`: Used to detect inappropriate language in passwords.
-- `zxcvbn`: Used to evaluate password strength against common patterns.
 
 To install dependencies, run:
 
@@ -226,3 +210,4 @@ Integrate FortiPassValidator into CLI tools to check password strength in bulk o
 ---
 
 Thank you for using FortiPassValidator! Feel free to contribute or reach out with questions.
+

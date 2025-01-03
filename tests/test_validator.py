@@ -3,7 +3,7 @@ from fortipass.validator import FortiPassValidator
 
 class TestFortiPassValidator(unittest.TestCase):
     def setUp(self):
-        self.validator = FortiPassValidator(min_length=8, require_upper=True, require_lower=True, require_numbers=True, require_special=True)
+        self.validator = FortiPassValidator(min_length=8, require_upper=True, require_lower=True, require_numbers=True, require_special=True, avoid_common=True)
 
     def test_valid_password(self):
         is_valid, feedback = self.validator.validate("ValidPass123!")
@@ -18,27 +18,32 @@ class TestFortiPassValidator(unittest.TestCase):
     def test_no_uppercase(self):
         is_valid, feedback = self.validator.validate("lowercase123!")
         self.assertFalse(is_valid)
-        self.assertIn("one uppercase letter", feedback)
+        self.assertIn("Consider adding uppercase letters", feedback)
 
     def test_no_lowercase(self):
         is_valid, feedback = self.validator.validate("UPPERCASE123!")
         self.assertFalse(is_valid)
-        self.assertIn("one lowercase letter", feedback)
+        self.assertIn("Consider adding lowercase letters", feedback)
 
     def test_no_number(self):
         is_valid, feedback = self.validator.validate("NoNumber!")
         self.assertFalse(is_valid)
-        self.assertIn("one numeric digit", feedback)
+        self.assertIn("Consider adding numbers", feedback)
 
     def test_no_special_character(self):
         is_valid, feedback = self.validator.validate("NoSpecial123")
         self.assertFalse(is_valid)
-        self.assertIn("one special character", feedback)
+        self.assertIn("Consider adding special characters", feedback)
 
     def test_contains_profanity(self):
         is_valid, feedback = self.validator.validate("Badword123!")
         self.assertFalse(is_valid)
-        self.assertIn("inappropriate language", feedback)
+        self.assertIn("Password contains inappropriate language", feedback)
+
+    def test_common_password(self):
+        is_valid, feedback = self.validator.validate("password")
+        self.assertFalse(is_valid)
+        self.assertIn("This password is too weak or commonly used", feedback)
 
     def test_custom_min_length(self):
         custom_validator = FortiPassValidator(min_length=12)
@@ -60,4 +65,3 @@ class TestFortiPassValidator(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
